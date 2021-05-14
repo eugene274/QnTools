@@ -28,6 +28,8 @@
 #pragma link C++ class Qn::Axis < double> + ;
 #pragma link C++ class Qn::QVec + ;
 #pragma link C++ class Qn::QVector + ;
+#pragma link C++ class Qn::KahanSumD + ;
+#pragma link C++ class Qn::KahanSumF + ;
 #pragma link C++ class Qn::Statistics + ;
 #pragma link C++ class Qn::BootStrap + ;
 #pragma link C++ class Qn::Stat + ;

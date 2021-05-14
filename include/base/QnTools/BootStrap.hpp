@@ -18,11 +18,14 @@
 #ifndef QNTOOLS_BOOTSTRAP_HPP_
 #define QNTOOLS_BOOTSTRAP_HPP_
 
+#include "KahanSum.hpp"
+
 #include <vector>
 #include <algorithm>
 #include <cmath>
 
 #include "Rtypes.h"
+
 
 namespace Qn {
 
@@ -36,8 +39,8 @@ class BootStrap {
         typename std::decay<decltype(std::declval<SAMPLES &>()[0])>::type;
     for (std::size_t i = 0; i < vector_sum_values_.size(); ++i) {
       for (ArrayValueType j = 0; j < sample_multiplicities_[i]; ++j) {
-        vector_sum_values_[i] += value * weight;
-        vector_sum_weights_[i] += weight;
+        vector_sum_values_[i].Fill(value * weight);
+        vector_sum_weights_[i].Fill(weight);
       }
     }
   }
@@ -56,17 +59,22 @@ class BootStrap {
     return means_;
   }
 
-  [[nodiscard]] std::vector<double> GetWeights() const { return vector_sum_weights_; }
+  [[nodiscard]] std::vector<double> GetWeights() const {
+    std::vector<double> result;
+    transform(begin(vector_sum_weights_), end(vector_sum_weights_),
+              back_inserter(result), [] (const KahanSumD& k) { return k.GetSum(); });
+    return result;
+  }
 
   friend BootStrap Merge(const BootStrap &lhs, const BootStrap &rhs);
   friend BootStrap MergeBins(const BootStrap &lhs, const BootStrap &rhs);
 
  private:
-  std::vector<double> vector_sum_values_;
-  std::vector<double> vector_sum_weights_;
+  std::vector<KahanSum<double>> vector_sum_values_;
+  std::vector<KahanSum<double>> vector_sum_weights_;
 
   /// \cond CLASSIMP
- ClassDef(BootStrap, 2);
+ ClassDef(BootStrap, 3);
   /// \endcond
 };
 

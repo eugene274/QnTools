@@ -30,10 +30,10 @@ BootStrap Merge(const BootStrap &lhs, const BootStrap &rhs) {
     result.vector_sum_weights_ = lhs.vector_sum_weights_;
   } else {
     for (int i = 0; i < rhs.vector_sum_values_.size(); ++i) {
-      result.vector_sum_weights_.push_back(lhs.vector_sum_weights_[i] +
-                                           rhs.vector_sum_weights_[i]);
-      result.vector_sum_values_.push_back(lhs.vector_sum_values_[i] +
-                                          rhs.vector_sum_values_[i]);
+      result.vector_sum_weights_.emplace_back(lhs.vector_sum_weights_[i] +
+                                              rhs.vector_sum_weights_[i]);
+      result.vector_sum_values_.emplace_back(lhs.vector_sum_values_[i] +
+                                             rhs.vector_sum_values_[i]);
     }
   }
   return result;
@@ -43,4 +43,4 @@ BootStrap MergeBins(const BootStrap &lhs, const BootStrap &rhs) {
   return Merge(lhs, rhs);
 }
 
-} // namespace Qn
+}  // namespace Qn

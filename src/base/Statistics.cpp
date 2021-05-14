@@ -26,20 +26,20 @@ void Statistics::Fill(double value, double weight) {
   max_ = std::max(max_, value);
   auto old_weights = sum_weights_;
   auto newvalue = value * weight;
-  sum_weights_ += weight;
+  sum_weights_.Fill(weight);
   auto num = weight * sum_values_ - old_weights * newvalue;
   if (old_weights != 0)
-    sum_sq_ += num * num / (sum_weights_ * weight * old_weights);
-  sum_weights2_ += weight * weight;
-  sum_values_ += newvalue;
+    sum_sq_.Fill(num * num / (sum_weights_ * weight * old_weights));
+  sum_weights2_.Fill(weight * weight);
+  sum_values_.Fill(newvalue);
 }
 
 Statistics Merge(const Statistics &lhs, const Statistics &rhs) {
   Statistics result = lhs;
-  result.sum_weights_ += rhs.sum_weights_;
+  result.sum_weights_.Fill(rhs.sum_weights_);
   result.n_entries_ += rhs.n_entries_;
-  result.sum_weights2_ += rhs.sum_weights2_;
-  result.sum_values_ += rhs.sum_values_;
+  result.sum_weights2_.Fill(rhs.sum_weights2_);
+  result.sum_values_.Fill(rhs.sum_values_);
   result.max_ = std::max(result.max_, rhs.max_);
   result.min_ = std::min(result.min_, rhs.min_);
   double num =
@@ -47,8 +47,8 @@ Statistics Merge(const Statistics &lhs, const Statistics &rhs) {
   result.sum_sq_ = lhs.sum_sq_ + rhs.sum_sq_;
   if (lhs.sum_weights_ != 0. && rhs.sum_weights_ != 0. &&
       result.sum_weights_ != 0.) {
-    result.sum_sq_ += (num * num) / (lhs.sum_weights_ * rhs.sum_weights_ *
-                                     result.sum_weights_);
+    result.sum_sq_.Fill((num * num) / (lhs.sum_weights_ * rhs.sum_weights_ *
+                                       result.sum_weights_));
   }
   return result;
 }

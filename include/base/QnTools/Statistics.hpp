@@ -18,6 +18,8 @@
 #ifndef FLOW_STATISTIC_HPP
 #define FLOW_STATISTIC_HPP
 
+#include "KahanSum.hpp"
+
 #include <vector>
 #include <algorithm>
 #include <cmath>
@@ -65,16 +67,16 @@ class Statistics {
   friend Statistics MergeBins(const Statistics &lhs, const Statistics &rhs);
 
  private:
-  double sum_values_ = 0;
-  double sum_sq_ = 0;
-  double sum_weights_ = 0.;
-  double sum_weights2_ = 0.;
+  KahanSumD sum_values_{0.};
+  KahanSumD sum_sq_{0.};
+  KahanSumD sum_weights_{0.};
+  KahanSumD sum_weights2_{0.};
   double n_entries_ = 0;
   double min_ = std::numeric_limits<double>::max();
   double max_ = std::numeric_limits<double>::min();
 
   /// \cond CLASSIMP
-  ClassDef(Statistics, 2);
+  ClassDef(Statistics, 3);
   /// \endcond
 };
 
